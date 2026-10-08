@@ -1,0 +1,43 @@
+file-version: 3
+
+# Premios que el jugador puede elegir.
+# type: vanilla | nexo | item
+# Los ítems de Nexo y de otros plugins no vienen puestos: se añaden con /osirisupgrader rewards.
+# type item guarda el ítem completo para que el premio funcione al entregarlo.
+# value es el valor de ese premio. No cambia el valor general de vanilla-items.yml.
+# En nexo, "id" acepta "nexo:clave" o la clave sola.
+# El premio se entrega con la data de Nexo intacta; display-name solo
+# se aplica a ítems vanilla y se usa en el mensaje de victoria.
+rewards:
+  diamante:
+    type: vanilla
+    material: DIAMOND
+    display-name: "&bDiamante"
+  netherite:
+    type: vanilla
+    material: NETHERITE_INGOT
+    display-name: "&8Lingote de netherite"
+  esmeralda:
+    type: vanilla
+    material: EMERALD
+    display-name: "&aEsmeralda"
+  manzana_dorada:
+    type: vanilla
+    material: GOLDEN_APPLE
+    display-name: "&6Manzana dorada"
+  manzana_encantada:
+    type: vanilla
+    material: ENCHANTED_GOLDEN_APPLE
+    display-name: "&dManzana encantada"
+  totem:
+    type: vanilla
+    material: TOTEM_OF_UNDYING
+    display-name: "&eTótem de la inmortalidad"
+  elytra:
+    type: vanilla
+    material: ELYTRA
+    display-name: "&fÉlitros"
+  estrella:
+    type: vanilla
+    material: NETHER_STAR
+    display-name: "&fEstrella del Nether"

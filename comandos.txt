@@ -1,0 +1,80 @@
+OsirisUpgrader — comandos y permisos
+
+Todos los comandos se escriben con /osirisupgrader.
+Un OP puede usarlos todos, aunque no tenga el permiso asignado.
+Quien no es OP solo puede usar un comando si le das el permiso.
+
+COMANDOS
+
+/osirisupgrader
+/osirisupgrader help
+  Qué hace: muestra la ayuda del plugin.
+  Permiso: ninguno. Lo puede usar cualquier jugador.
+  OP: no hace falta.
+
+/osirisupgrader reload
+  Qué hace: recarga config.yml, vanilla-items.yml, rewards.yml, messages.yml y menus.yml.
+  Permiso: osirisupgrader.reload
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader giveitem [jugador]
+  Qué hace: entrega el ítem que abre el menú de la ruleta. Si no pones jugador, te lo da a ti. Desde la consola hay que indicar el jugador.
+  Permiso: osirisupgrader.give
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader spawner [jugador]
+  Qué hace: entrega el cofre que coloca una ruleta. Si no pones jugador, te lo da a ti. Desde la consola hay que indicar el jugador.
+  Permiso: osirisupgrader.spawner
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader clear
+  Qué hace: borra las ruletas del servidor, también las que ya no se pueden retirar a mano.
+  Permiso: osirisupgrader.clear
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader clearnear
+  Qué hace: borra esas ruletas en un radio de 10 bloques alrededor de quien lo ejecuta. Solo lo puede usar un jugador, no la consola.
+  Permiso: osirisupgrader.clear
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader rewards
+  Qué hace: abre el editor de premios. Lo que cambies se guarda en rewards.yml. El valor de ahí es el valor del premio, no el valor base para apostar. Solo lo puede usar un jugador.
+  Permiso: osirisupgrader.rewards
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader base
+  Qué hace: abre el editor del valor base para apostar ítems custom. Se guarda en custom-items.yml. Los materiales vanilla se editan en vanilla-items.yml. Solo lo puede usar un jugador.
+  Permiso: osirisupgrader.base
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader history
+  Qué hace: muestra en el chat los últimos 10 giros. El historial completo está en history.log, dentro de la carpeta del plugin. Cada línea guarda jugador, apuesta, multiplicador, probabilidad, si ganó o perdió y el premio.
+  Permiso: osirisupgrader.history
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader historyclear
+  Qué hace: borra history.log.
+  Permiso: osirisupgrader.historyclear
+  OP: sí. Por defecto solo operadores.
+
+PERMISOS QUE NO SON UN COMANDO
+
+osirisupgrader.use
+  Qué hace: clic derecho en la ruleta abre el menú para apostar. Clic izquierdo sin agacharse abre la lista de valores base.
+  OP: no. Por defecto lo tienen todos los jugadores.
+
+osirisupgrader.break
+  Qué hace: agacharse y clic izquierdo retira la ruleta.
+  OP: sí. Por defecto solo operadores.
+
+osirisupgrader.bypass-cooldown
+  Qué hace: gira sin esperar las 24 horas. No salta la regla de un solo giro a la vez en la misma ruleta.
+  OP: sí. Por defecto solo operadores.
+
+osirisupgrader.precise-chance
+  Qué hace: ve el porcentaje con decimales, por ejemplo 50.05%. El resto ve 50%.
+  OP: sí. Por defecto solo operadores.
+
+osirisupgrader.admin
+  Qué hace: reúne el resto de permisos de esta lista, incluido osirisupgrader.use.
+  OP: sí. Por defecto solo operadores.

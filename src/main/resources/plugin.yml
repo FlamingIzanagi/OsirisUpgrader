@@ -1,0 +1,67 @@
+name: OsirisUpgrader
+version: '${version}'
+main: com.osiris.upgrader.OsirisUpgraderPlugin
+api-version: '1.21'
+author: Franco
+description: Ruleta física de mejora de ítems, con integración opcional con Nexo.
+softdepend: [Nexo, LuckPerms, floodgate, Geyser-Spigot]
+
+commands:
+  osiris:
+    description: Administra la ruleta.
+    usage: /<command> <reload|giveitem|spawner|clear|clearnear|rewards|base|history|historyclear|help>
+    aliases: [osirisupgrader, ou]
+
+permissions:
+  osirisupgrader.use:
+    description: Abrir la ruleta y apostar ítems.
+    default: true
+  osirisupgrader.reload:
+    description: Recarga config.yml, vanilla-items.yml, rewards.yml, messages.yml y menus.yml.
+    default: op
+  osirisupgrader.give:
+    description: Entrega el ítem que abre el menú de la ruleta.
+    default: op
+  osirisupgrader.spawner:
+    description: Entrega el cofre spawner de la ruleta de Armor Stands.
+    default: op
+  osirisupgrader.break:
+    description: Retira una ruleta con Shift + clic izquierdo.
+    default: op
+  osirisupgrader.clear:
+    description: Borra entidades de ruletas viejas que ya no se pueden retirar.
+    default: op
+  osirisupgrader.bypass-cooldown:
+    description: Gira la ruleta sin esperar spin-cooldown-seconds. Sigue valiendo que solo una persona la use a la vez.
+    default: op
+  osirisupgrader.rewards:
+    description: Abre el editor de premios y guarda los cambios en rewards.yml.
+    default: op
+  osirisupgrader.base:
+    description: Abre el editor del valor base para apostar ítems custom.
+    default: op
+  osirisupgrader.precise-chance:
+    description: Ve los decimales del porcentaje de éxito. El resto de jugadores ve el porcentaje entero.
+    default: op
+  osirisupgrader.history:
+    description: Muestra los últimos giros. El archivo completo es history.log.
+    default: op
+  osirisupgrader.historyclear:
+    description: Borra history.log.
+    default: op
+  osirisupgrader.admin:
+    description: Reúne los permisos de administración.
+    default: op
+    children:
+      osirisupgrader.use: true
+      osirisupgrader.reload: true
+      osirisupgrader.give: true
+      osirisupgrader.spawner: true
+      osirisupgrader.break: true
+      osirisupgrader.clear: true
+      osirisupgrader.bypass-cooldown: true
+      osirisupgrader.rewards: true
+      osirisupgrader.base: true
+      osirisupgrader.precise-chance: true
+      osirisupgrader.history: true
+      osirisupgrader.historyclear: true

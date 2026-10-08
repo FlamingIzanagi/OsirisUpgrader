@@ -1,0 +1,72 @@
+config-version: 8
+
+# Selector global de interfaz: "vanilla" o "nexo".
+# vanilla es el menú por defecto aunque Nexo esté instalado.
+# "nexo" activa el arte multi-slot definido en menus.yml.
+menu-type: "vanilla"
+
+# La probabilidad real es (apuesta / destino) * 100 * chance-factor,
+# después recortada a [min-chance, max-chance].
+# chance-factor: 1.0 usa la proporción directa.
+# El mod Upgrader de referencia usa 0.9 y, con carne cruda 24 contra
+# carne cocida 54, eso da exactamente 40.00%.
+min-chance: 1.0
+max-chance: 95.0
+chance-factor: 1.0
+
+# Segundos que espera un jugador entre un giro y el siguiente.
+# 86400 son 24 horas. Vale para cualquier ruleta y para el ítem portátil. 0 desactiva el límite.
+spin-cooldown-seconds: 86400
+
+# Aviso a todos los jugadores cuando alguien termina un giro, gane o pierda.
+# El texto se edita en messages.yml, en messages.daily-spin. %player% es el nombre.
+broadcast-daily-spin: true
+# false envía ese aviso sin el prefijo de messages.yml. Los demás mensajes no cambian.
+daily-spin-prefix: true
+
+# Las herramientas dañadas valen menos, en proporción a la durabilidad restante.
+scale-damaged-tools: true
+
+sounds:
+  spin-tick: BLOCK_NOTE_BLOCK_PLING
+  win: ENTITY_PLAYER_LEVELUP
+  fail: ENTITY_VILLAGER_NO
+  click: UI_BUTTON_CLICK
+
+items:
+  portable:
+    material: ECHO_SHARD
+    custom-model-data: 88101
+  spawner:
+    material: CHEST
+    custom-model-data: 88102
+
+animation:
+  duration-ticks: 70
+  extra-rotations: 5
+  tick-sound-interval: 2
+
+roulette:
+  segments: 16
+  # Segundos entre cada premio que se muestra en el centro, en reposo.
+  showcase-interval-seconds: 3
+  radius: 1.35
+  frame-gap: 0.42
+  center-raise: 1.9
+  max-roulettes: 40
+  min-distance: 3.5
+  small-stands: false
+  # false deja hitbox en los segmentos para poder golpear cualquier parte.
+  marker-visuals: false
+  success-material: LIME_CONCRETE
+  fail-material: RED_CONCRETE
+  hub-material: OAK_PLANKS
+  post-material: OAK_FENCE
+  base-material: OAK_PLANKS
+  needle-material: WHITE_CONCRETE
+  needle-tip-material: WHITE_CONCRETE
+  frame-material: BLACK_CONCRETE
+  frame-accent: BLACK_CONCRETE
+  idle-palette:
+    - RED_CONCRETE
+    - BLACK_CONCRETE

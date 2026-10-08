@@ -1,0 +1,268 @@
+file-version: 12
+
+# Colores en cualquier texto: &a &c &l &o, hex &#RRGGBB, #RRGGBB, &x&R&R&G&G&B&B
+# o MiniMessage: <color:#e5be01>texto</color> <bold> <dark_gray> <reset>
+
+messages:
+  # Prefijo de los mensajes del chat.
+  # Acepta &, &#RRGGBB, #RRGGBB y &x&R&R&G&G&B&B.
+  prefix: "&8[&eOsirisUpgrader&8] &7"
+  reload-success: "&aConfiguración recargada."
+  reload-failed: "&cNo se pudo recargar. Revisa la consola."
+  no-permission: "&cSin permisos."
+  spin-win: "&aHas ganado &fx%amount% %reward_name%&a. Probabilidad: &f%chance%%&a."
+  spin-fail: "&cHas perdido. Se gastó lo apostado."
+  # Broadcast a todos. %player% es quien giró.
+  # Se apaga con broadcast-daily-spin en config.yml. El prefijo de esta línea se quita con daily-spin-prefix.
+  daily-spin: "&eEl jugador &f%player% &eha usado su giro de ruleta diaria."
+  only-players: "&cSolo los jugadores pueden usar ese comando."
+  unknown-command: "&cComando desconocido. Usa &f/osiris help&c."
+  player-not-found: "&cJugador no encontrado."
+  player-required: "&cIndica un jugador: &f/osiris %command% <jugador>"
+  giveitem-received: "&eRecibiste el ítem para abrir la ruleta."
+  giveitem-sent: "&eEntregaste el ítem de la ruleta a &f%player%&e."
+  spawner-received: "&eRecibiste el spawner de la ruleta."
+  spawner-sent: "&eEntregaste el spawner a &f%player%&e."
+  clear-use-full: "&cEsos comandos se usan con &f/osirisupgrader clear &cy &f/osirisupgrader clearnear&c."
+  clear-done: "&eSe eliminaron &f%count% &eentidades de ruletas."
+  clear-none: "&7No había ruletas que borrar."
+  rewards-use-full: "&cEse comando se usa con &f/osirisupgrader rewards&c."
+  rewards-added: "&a%item% &eañadido a los premios."
+  rewards-exists: "&cEse ítem ya está en la lista de premios."
+  rewards-denied: "&cEse ítem no se puede añadir como premio."
+  rewards-full: "&cEl editor está lleno."
+  rewards-removed: "&e%item% &cya no está en la lista de premios."
+  rewards-type-value: "&eEscribe el valor de premio de &f%item%&e. &7No cambia el valor general. &7cancelar &epara salir."
+  rewards-type-limit: "&eEscribe el límite de premio de &f%item%&e. &70 &equita el límite. &7cancelar &epara salir."
+  rewards-value-set: "&eValor de premio de &f%item%&e: &f%value%&e."
+  rewards-limit-set: "&eLímite de premio de &f%item%&e: &f%limit%&e."
+  rewards-limit-cleared: "&e%item% &eya no tiene límite de premio."
+  rewards-type-stock: "&eEscribe cuántos &f%item% &ese pueden ganar en total. &70 &equita el premio limitado. &7cancelar &epara salir."
+  rewards-stock-set: "&ePremio limitado de &f%item%&e: &f%stock%&e. Solo se puede ganar de uno en uno."
+  rewards-stock-cleared: "&e%item% &eya no es un premio limitado."
+  limited-one: "&cDe este premio solo puedes ganar 1."
+  limited-no-multi: "&cEste premio limitado no se puede multiplicar."
+  limited-gone: "&cEse premio limitado ya no queda."
+  rewards-invalid-number: "&cEscribe un número válido."
+  rewards-cancelled: "&7Edición cancelada."
+  base-use-full: "&cEse comando se usa con &f/osirisupgrader base&c."
+  base-added: "&a%item% &eañadido. Su valor base es &f%value%&e."
+  base-exists: "&cEse ítem ya tiene un valor base."
+  base-denied: "&cEse ítem no se puede registrar aquí."
+  base-vanilla: "&cLos materiales vanilla se configuran en vanilla-items.yml."
+  base-full: "&cEl editor está lleno."
+  base-removed: "&e%item% &cya no tiene valor base."
+  base-type-value: "&eEscribe el valor base de &f%item%&e para apostarlo. &7cancelar &epara salir."
+  base-value-set: "&eValor base de &f%item%&e: &f%value%&e."
+  base-invalid-number: "&cEscribe un número válido."
+  base-cancelled: "&7Edición cancelada."
+  roulette-placed: "&eRuleta colocada."
+  roulette-removed: "&eRuleta retirada."
+  roulette-limit: "&cSe alcanzó el límite de ruletas del servidor."
+  roulette-too-close: "&cHay otra ruleta demasiado cerca."
+  roulette-busy: "&cEsta ruleta ya está girando."
+  roulette-in-use: "&c%player% está usando esta ruleta. Espera a que deje de usarla."
+  spin-wait: "&e%player% &eestá girando esta ruleta. Espera a que gane el premio para poder girar."
+  spin-cooldown: "&cDebes esperar &f%time% &cpara volver a girar la ruleta."
+  cannot-break-spinning: "&cEspera a que la aguja se detenga."
+  break-hint: "&7Agáchate y usa clic izquierdo para retirar la ruleta."
+  no-origin: "&cPon el ítem que quieres apostar."
+  no-target: "&cElige el premio que quieres ganar."
+  no-value: "&cEse ítem no vale nada. No se puede apostar."
+  not-enough-items: "&cPara &f%multiplier% &cnecesitas &f%needed% &cde ese ítem."
+  inventory-full-drop: "&eTu inventario estaba lleno. Parte del premio cayó al suelo."
+  amount-capped: "&7La cantidad máxima de un stack es &f64&7."
+  win-limit: "&c%reward_name% &csolo permite ganar &f%limit% &cpor apuesta, contando el multiplicador."
+  nexo-missing: "&cEse premio no está disponible."
+  special-item-blocked: "&cEse ítem no se puede apostar."
+  already-spinning: "&cEspera a que termine el giro."
+  history-use-full: "&cEse comando se usa con &f/osirisupgrader history&c."
+  history-empty: "&7Todavía no hay giros en el historial."
+  history-header: "&eÚltimos giros. El archivo completo es &fhistory.log&e, en la carpeta del plugin."
+  historyclear-use-full: "&cEse comando se usa con &f/osirisupgrader historyclear&c."
+  history-cleared: "&eHistorial borrado. Se eliminaron &f%count% &egiros."
+  history-clear-empty: "&7El historial ya estaba vacío."
+  delivered-later: "&eEl giro terminó mientras no estabas. Aquí está el resultado."
+  reward-label: "&6%reward_name% &ex%amount%"
+  # Nombre bajo el premio del centro. %reward_name% es el nombre en español.
+  # Acepta & , &#RRGGBB, #RRGGBB y &x&R&R&G&G&B&B.
+  showcase-label: "&6%reward_name%"
+  help-header: "&eComandos de OsirisUpgrader"
+  help:
+    - "&f/osiris reload &7- recarga los 5 YAML &8(osirisupgrader.reload)"
+    - "&f/osiris giveitem [jugador] &7- ítem para abrir el menú, no colocable &8(osirisupgrader.give)"
+    - "&f/osiris spawner [jugador] &7- cofre que coloca la ruleta &8(osirisupgrader.spawner)"
+    - "&f/osirisupgrader clear &7- borra las ruletas del servidor, también las actuales &8(osirisupgrader.clear)"
+    - "&f/osirisupgrader clearnear &7- lo mismo, a 10 bloques de ti &8(osirisupgrader.clear)"
+    - "&f/osirisupgrader rewards &7- editor de premios &8(osirisupgrader.rewards u OP)"
+    - "&f/osirisupgrader base &7- valor base para apostar ítems custom &8(osirisupgrader.base u OP)"
+    - "&f/osirisupgrader history &7- últimos giros. El archivo completo es history.log &8(osirisupgrader.history u OP)"
+    - "&f/osirisupgrader historyclear &7- borra history.log &8(osirisupgrader.historyclear u OP)"
+    - "&7Agachado + clic izquierdo retira la ruleta &8(osirisupgrader.break u OP)"
+  actionbar-spinning: "&eGirando... &f%chance%%"
+  actionbar-win: "&aHas ganado."
+  actionbar-fail: "&cHas perdido."
+
+gui-texts:
+  title-nexo: "§8Ruleta"
+  title-vanilla: "§8Ruleta"
+  browser-title: "§8Elige el premio"
+  values-title: "§8Valores base"
+  values-entry:
+    - "&7Valor base: &f%value%"
+  values-previous:
+    name: "&ePágina anterior"
+    lore:
+      - "&7Página &f%page%&7/&f%pages%"
+  values-next:
+    name: "&ePágina siguiente"
+    lore:
+      - "&7Página &f%page%&7/&f%pages%"
+  values-close:
+    name: "&cCerrar"
+  values-empty:
+    name: "&7Sin valores"
+    lore:
+      - "&7No hay ítems con valor base."
+  spin-wait:
+    - ""
+    - "&c%player% está girando esta ruleta."
+    - "&cEspera a que gane el premio."
+  none: "Ninguno"
+  spin-button:
+    name: "&e&lGIRAR"
+    lore:
+      - "&7Apuestas: &f%origin_item%"
+      - "&7Premio: &fx%win_amount% %target_item%"
+      - "&7Probabilidad: &e%chance%%"
+      - ""
+      - "&7El menú se cierra para ver el giro."
+  spinning-button:
+    name: "&6&lGirando..."
+    lore:
+      - "&7Probabilidad: &e%chance%%"
+  chance-display:
+    name: "&e%chance%%"
+    lore:
+      - "&7Tu apuesta vale &f%bet_value%"
+      - "&7El premio vale &f%target_value%"
+  spinning-display:
+    name: "&e%chance%%"
+    lore:
+      - "&7Girando..."
+  empty-display:
+    name: "&7Elige apuesta y premio"
+    lore:
+      - "&7Pon un ítem a la izquierda."
+      - "&7Elige lo que quieres ganar."
+  bet-empty:
+    name: "&7Tu apuesta"
+    lore:
+      - "&7Pon el ítem en el hueco de al lado."
+      - "&7Aquí verás cuánto vale."
+  bet-invalid:
+    name: "&cNo se puede apostar"
+    lore:
+      - "&f%origin_name%"
+      - "&7Este ítem no tiene valor."
+  bet-info:
+    name: "&f%origin_name% x%count%"
+    lore:
+      - "&7Valor: &f%each%"
+      - "&7Valor total: &f%stack_value%"
+  plus-1:
+    name: "&a&l+1"
+    lore:
+      - "&7Clic izquierdo: suma %step% al premio."
+      - "&7Clic derecho: resta %step%."
+  plus-15:
+    name: "&a&l+15"
+    lore:
+      - "&7Clic izquierdo: suma %step% al premio."
+      - "&7Clic derecho: resta %step%."
+  plus-32:
+    name: "&a&l+32"
+    lore:
+      - "&7Clic izquierdo: suma %step% al premio."
+      - "&7Clic derecho: resta %step%."
+  multiplier:
+    name: "&bx%multiplier%"
+    lore:
+      - "&7Ganas &f%multiplier% &7veces el premio."
+      - "&7Con esto ganarías &f%win_preview%&7."
+      - "&7La probabilidad baja según lo apostado."
+      - "&7Púlsalo otra vez para volver a x1."
+  target-empty:
+    name: "&eElegir premio"
+    lore:
+      - "&7Clic para abrir la lista."
+  # Lore del premio limitado en los menús. No se escribe en el ítem que gana el jugador.
+  # Puedes dejar una sola línea: limited-badge: "&6&lPremio Limitado"
+  # o varias, como abajo. Acepta & &l &o, hex &#RRGGBB, #RRGGBB, &x&R&R&G&G&B&B
+  # y MiniMessage: <color:#e5be01><bold>Premio Limitado</bold></color>
+  limited-badge:
+    - "&8&m------------"
+    - "&6&lPremio Limitado"
+    - "&8&m------------"
+  # Cada entrada es una línea del lore. Agrega o borra líneas para cambiar cuántas hay.
+  # %target_value% es el valor de todo el premio.
+  target-selected:
+    - "&7Vale &f%target_value%"
+    - "&eClic para cambiar."
+  guide:
+    name: "&eCómo apostar"
+    lore:
+      - "&7El hueco de la izquierda es tu apuesta."
+      - "&7Al lado ves el nombre, el valor y el total."
+      - "&7El girasol del centro gira la ruleta."
+      - "&7La flecha de arriba muestra la probabilidad."
+      - "&7+1, +15 y +32 están a la derecha."
+      - "&7Clic izquierdo suma. Clic derecho resta."
+      - ""
+      - "&bx2 &7ganas el doble de premios."
+      - "&bx4 &7ganas cuatro veces."
+      - "&bx8 &7ganas ocho veces."
+      - "&7Cuantos más premios, menor probabilidad."
+      - "&7Vuelve a pulsar el mismo para volver a x1."
+  browser-next:
+    name: "&eSiguiente"
+    lore:
+      - "&7Página &f%page%&7/&f%pages%"
+  browser-previous:
+    name: "&eAnterior"
+    lore:
+      - "&7Página &f%page%&7/&f%pages%"
+  browser-back:
+    name: "&cVolver"
+  browser-info:
+    name: "&ePremios"
+    lore:
+      - "&7Página &f%page%&7 de &f%pages%"
+      - "&7Clic en uno para elegirlo."
+      - "&7Vale es el precio de uno."
+  # Cada entrada es una línea del lore del premio. Agrega o borra líneas para cambiar cuántas hay.
+  # %unit_value% es el valor de uno.
+  browser-entry:
+    - "&7Vale &f%unit_value%"
+    - "&eClic para elegirlo."
+  browser-empty:
+    name: "&cSin premios"
+    lore:
+      - "&7Revisa rewards.yml."
+  wheel-success:
+    name: "&aZona de éxito"
+  wheel-fail:
+    name: "&cZona de fallo"
+  wheel-needle:
+    name: "&fAguja"
+
+items:
+  portable-name: "&eRuleta portátil"
+  portable-lore:
+    - "&7Clic derecho para abrir el menú."
+    - "&8No se puede colocar."
+  spawner-name: "&eSpawner de ruleta"
+  spawner-lore:
+    - "&7Colócalo para crear la ruleta."
+    - "&7Clic derecho: abrir el menú."
+    - "&7Agachado + clic izquierdo: retirarla."
