@@ -9,7 +9,7 @@ softdepend: [Nexo, LuckPerms, floodgate, Geyser-Spigot]
 commands:
   osiris:
     description: Administra la ruleta.
-    usage: /<command> <reload|giveitem|spawner|clear|clearnear|rewards|base|history|historyclear|help>
+    usage: /<command> <reload|giveitem|spawner|clear|clearnear|rewards|base|history|historyclear|givespins|givespinsall|help>
     aliases: [osirisupgrader, ou]
 
 permissions:
@@ -32,7 +32,13 @@ permissions:
     description: Borra entidades de ruletas viejas que ya no se pueden retirar.
     default: op
   osirisupgrader.bypass-cooldown:
-    description: Gira la ruleta sin esperar spin-cooldown-seconds. Sigue valiendo que solo una persona la use a la vez.
+    description: Gira la ruleta sin gastar giros diarios ni extra. Sigue valiendo que solo una persona la use a la vez.
+    default: op
+  osirisupgrader.givespins:
+    description: Da giros extra a un jugador. No cuentan como giros diarios.
+    default: op
+  osirisupgrader.givespinsall:
+    description: Da giros extra a todos los jugadores conectados.
     default: op
   osirisupgrader.rewards:
     description: Abre el editor de premios y guarda los cambios en rewards.yml.
@@ -65,3 +71,5 @@ permissions:
       osirisupgrader.precise-chance: true
       osirisupgrader.history: true
       osirisupgrader.historyclear: true
+      osirisupgrader.givespins: true
+      osirisupgrader.givespinsall: true

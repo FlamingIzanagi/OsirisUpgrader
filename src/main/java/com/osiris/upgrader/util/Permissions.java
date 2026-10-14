@@ -15,6 +15,8 @@ public final class Permissions {
     public static final String PRECISE_CHANCE = "osirisupgrader.precise-chance";
     public static final String HISTORY = "osirisupgrader.history";
     public static final String HISTORY_CLEAR = "osirisupgrader.historyclear";
+    public static final String GIVE_SPINS = "osirisupgrader.givespins";
+    public static final String GIVE_SPINS_ALL = "osirisupgrader.givespinsall";
 
     private Permissions() {
     }

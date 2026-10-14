@@ -88,6 +88,9 @@ public final class Messages {
         for (String line : list("messages.help")) {
             sender.sendMessage(Text.component(line));
         }
+        for (String line : lines("messages.help-spins")) {
+            sender.sendMessage(Text.component(line));
+        }
     }
 
     private String prefix(Map<String, String> placeholders) {

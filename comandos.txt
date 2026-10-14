@@ -57,6 +57,16 @@ COMANDOS
   Permiso: osirisupgrader.historyclear
   OP: sí. Por defecto solo operadores.
 
+/osirisupgrader givespins <jugador> <cantidad>
+  Qué hace: da giros extra a un jugador. Esos giros no forman parte de los diarios y no se reinician con la ventana. El jugador puede estar desconectado si ya entró antes al servidor. La cantidad va de 1 a 100000.
+  Permiso: osirisupgrader.givespins
+  OP: sí. Por defecto solo operadores.
+
+/osirisupgrader givespinsall <cantidad>
+  Qué hace: da esa cantidad de giros extra a cada jugador que esté conectado en ese momento. No se los da a quien esté desconectado.
+  Permiso: osirisupgrader.givespinsall
+  OP: sí. Por defecto solo operadores.
+
 PERMISOS QUE NO SON UN COMANDO
 
 osirisupgrader.use
@@ -68,7 +78,7 @@ osirisupgrader.break
   OP: sí. Por defecto solo operadores.
 
 osirisupgrader.bypass-cooldown
-  Qué hace: gira sin esperar las 24 horas. No salta la regla de un solo giro a la vez en la misma ruleta.
+  Qué hace: gira sin gastar giros diarios ni extra. No salta la regla de un solo giro a la vez en la misma ruleta.
   OP: sí. Por defecto solo operadores.
 
 osirisupgrader.precise-chance

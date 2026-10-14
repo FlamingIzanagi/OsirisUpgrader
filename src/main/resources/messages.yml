@@ -64,6 +64,16 @@ messages:
   roulette-in-use: "&c%player% está usando esta ruleta. Espera a que deje de usarla."
   spin-wait: "&e%player% &eestá girando esta ruleta. Espera a que gane el premio para poder girar."
   spin-cooldown: "&cDebes esperar &f%time% &cpara volver a girar la ruleta."
+  spins-locked: "&cNo te quedan giros diarios. Espera &f%time%&c. Giros extra: &f%extra%&c."
+  spins-empty: "&cNo tienes giros. Los diarios están desactivados y no tienes giros extra."
+  spins-usage: "&cUsa &f/osirisupgrader givespins <jugador> <cantidad>&c."
+  spins-all-usage: "&cUsa &f/osirisupgrader givespinsall <cantidad>&c."
+  spins-invalid-amount: "&cLa cantidad tiene que ser un número entre &f1 &cy &f100000&c."
+  spins-given: "&aLe diste &f%amount% &agiros extra a &f%player%&a. Ahora tiene &f%extra%&a."
+  spins-given-all: "&aDiste &f%amount% &agiros extra a &f%count% &ajugadores conectados."
+  spins-received: "&aRecibiste &f%amount% &agiros extra. Tienes &f%extra% &aen total."
+  spins-nobody: "&cNo hay jugadores conectados."
+  spins-use-full: "&cEsos comandos se usan con &f/osirisupgrader givespins &cy &f/osirisupgrader givespinsall&c."
   cannot-break-spinning: "&cEspera a que la aguja se detenga."
   break-hint: "&7Agáchate y usa clic izquierdo para retirar la ruleta."
   no-origin: "&cPon el ítem que quieres apostar."
@@ -99,6 +109,9 @@ messages:
     - "&f/osirisupgrader history &7- últimos giros. El archivo completo es history.log &8(osirisupgrader.history u OP)"
     - "&f/osirisupgrader historyclear &7- borra history.log &8(osirisupgrader.historyclear u OP)"
     - "&7Agachado + clic izquierdo retira la ruleta &8(osirisupgrader.break u OP)"
+  help-spins:
+    - "&f/osirisupgrader givespins <jugador> <cantidad> &7- giros extra para un jugador &8(osirisupgrader.givespins)"
+    - "&f/osirisupgrader givespinsall <cantidad> &7- giros extra para todos los conectados &8(osirisupgrader.givespinsall)"
   actionbar-spinning: "&eGirando... &f%chance%%"
   actionbar-win: "&aHas ganado."
   actionbar-fail: "&cHas perdido."
@@ -137,6 +150,10 @@ gui-texts:
       - "&7Probabilidad: &e%chance%%"
       - ""
       - "&7El menú se cierra para ver el giro."
+  spin-balance:
+    - ""
+    - "&7Giros diarios: &f%daily_left%&7/&f%daily_max%"
+    - "&7Giros extra: &f%extra%"
   spinning-button:
     name: "&6&lGirando..."
     lore:

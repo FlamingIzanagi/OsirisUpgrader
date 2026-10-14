@@ -2,7 +2,7 @@
 
 Paper 1.21.8 plugin. Place a physical roulette and bet items to try for a prize. Chance comes from the bet value versus the prize value. The server decides the result before the needle moves.
 
-The source in this repository is **6.0.0**. Older jars are on [Releases](https://github.com/FlamingIzanagi/OsirisUpgrader/releases).
+The source in this repository is **7.0.0**. Older jars are on [Releases](https://github.com/FlamingIzanagi/OsirisUpgrader/releases).
 
 ## Requirements
 
@@ -13,7 +13,7 @@ The source in this repository is **6.0.0**. Older jars are on [Releases](https:/
 
 ## Install
 
-Copy `OsirisUpgrader-6.0.0.jar` into `plugins` and restart the server. On first start it creates `plugins/OsirisUpgrader/` with the default files. If you already had an older version, the plugin adds new keys and leaves the values you already changed. It does not wipe wheels, rewards, history, or pending spins.
+Copy `OsirisUpgrader-7.0.0.jar` into `plugins` and restart the server. On first start it creates `plugins/OsirisUpgrader/` with the default files. If you already had an older version, the plugin adds new keys and leaves the values you already changed. It does not wipe wheels, rewards, history, or pending spins.
 
 ## Build
 
@@ -37,7 +37,9 @@ In the menu:
 - `+1`, `+15`, and `+32` change the amount. `x2`, `x4`, and `x8` multiply the prize and lower the chance.
 - The sunflower in the center spins the wheel, consumes the bet, and closes the menu.
 
-Several players can have the menu open at once. Only one can spin that wheel until the spin ends. There is a cooldown between spins, 24 hours by default.
+Several players can have the menu open at once. Only one can spin that wheel until the spin ends.
+
+Each player has `daily-spins` spins per window. The window length is `spin-cooldown-seconds` (24 hours by default). With `daily-spins: 1` that is one spin per day. Extra spins, given by command, are a separate balance: they are used only after the daily spins are gone, and they are not reset when the window ends. `daily-spins: 0` leaves only extra spins. `spin-cooldown-seconds: 0` removes the daily limit.
 
 If the server stops mid-spin, `pending-spins.yml` stores the result and delivers it when the player joins again.
 
@@ -95,14 +97,16 @@ Everything uses `/osirisupgrader`. Operators can run them without the permission
 | `/osirisupgrader base` | `osirisupgrader.base` | Base-value editor for custom items |
 | `/osirisupgrader history` | `osirisupgrader.history` | Last 10 spins |
 | `/osirisupgrader historyclear` | `osirisupgrader.historyclear` | Deletes `history.log` |
+| `/osirisupgrader givespins <player> <amount>` | `osirisupgrader.givespins` | Gives extra spins to one player, online or previously joined |
+| `/osirisupgrader givespinsall <amount>` | `osirisupgrader.givespinsall` | Gives extra spins to every player online right now |
 
-Other permissions, without their own command: `osirisupgrader.use` (everyone by default), `osirisupgrader.break`, `osirisupgrader.bypass-cooldown`, `osirisupgrader.precise-chance`, and `osirisupgrader.admin`.
+Other permissions, without their own command: `osirisupgrader.use` (everyone by default), `osirisupgrader.break`, `osirisupgrader.bypass-cooldown` (spin without spending daily or extra spins), `osirisupgrader.precise-chance`, and `osirisupgrader.admin`.
 
 ## Config files
 
 | File | Purpose |
 | --- | --- |
-| `config.yml` | Chance, cooldown, broadcast, sounds, and wheel |
+| `config.yml` | Chance, daily spins, cooldown window, broadcast, sounds, and wheel |
 | `vanilla-items.yml` | Base value of vanilla materials |
 | `custom-items.yml` | Base value of custom items, created by `/osirisupgrader base` |
 | `rewards.yml` | Prizes, prize value, per-bet cap, limited stock, and glow |

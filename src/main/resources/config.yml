@@ -14,9 +14,13 @@ min-chance: 1.0
 max-chance: 95.0
 chance-factor: 1.0
 
-# Segundos que espera un jugador entre un giro y el siguiente.
-# 86400 son 24 horas. Vale para cualquier ruleta y para el ítem portátil. 0 desactiva el límite.
+# Segundos que dura la ventana de los giros diarios.
+# 86400 son 24 horas. Vale para cualquier ruleta y para el ítem portátil. 0 quita el límite.
 spin-cooldown-seconds: 86400
+
+# Giros diarios de cada jugador dentro de esa ventana.
+# 1 es un giro por ventana. 0 deja solo los giros extra que entregue un admin.
+daily-spins: 1
 
 # Aviso a todos los jugadores cuando alguien termina un giro, gane o pierda.
 # El texto se edita en messages.yml, en messages.daily-spin. %player% es el nombre.

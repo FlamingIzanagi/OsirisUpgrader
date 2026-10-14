@@ -4,7 +4,6 @@ import com.osiris.upgrader.OsirisUpgraderPlugin;
 import com.osiris.upgrader.config.MenuLayout;
 import com.osiris.upgrader.item.RewardEntry;
 import com.osiris.upgrader.roulette.ChanceCalculator;
-import com.osiris.upgrader.roulette.SpinCooldowns;
 import com.osiris.upgrader.roulette.WheelMath;
 import com.osiris.upgrader.util.Permissions;
 import com.osiris.upgrader.util.Text;
@@ -149,12 +148,9 @@ public final class UpgraderGui {
     }
 
     private boolean blocked(Player player, UUID rouletteId) {
-        if (!Permissions.has(player, Permissions.BYPASS_COOLDOWN)) {
-            long remaining = plugin.cooldowns().remainingMillis(player.getUniqueId());
-            if (remaining > 0L) {
-                plugin.messages().send(player, "spin-cooldown", Map.of("time", SpinCooldowns.formatRemaining(remaining)));
-                return true;
-            }
+        if (!Permissions.has(player, Permissions.BYPASS_COOLDOWN) && !plugin.cooldowns().available(player.getUniqueId())) {
+            plugin.cooldowns().deny(player);
+            return true;
         }
         if (rouletteId == null) {
             UUID occupant = plugin.sessions().occupant(rouletteId);
@@ -373,6 +369,17 @@ public final class UpgraderGui {
         if (spinner != null) {
             for (String raw : plugin.messages().list("gui-texts.spin-wait")) {
                 lines.add(Text.itemText(Text.apply(raw, Map.of("player", spinner))));
+            }
+        }
+        Player viewer = Bukkit.getPlayer(holder.playerId());
+        if (viewer != null && plugin.configs().spinCooldownSeconds() > 0L && !Permissions.has(viewer, Permissions.BYPASS_COOLDOWN)) {
+            Map<String, String> balance = Map.of(
+                    "daily_left", Integer.toString(plugin.cooldowns().dailyRemaining(viewer.getUniqueId())),
+                    "daily_max", Integer.toString(plugin.configs().dailySpins()),
+                    "extra", Integer.toString(plugin.cooldowns().extra(viewer.getUniqueId()))
+            );
+            for (String raw : plugin.messages().lines("gui-texts.spin-balance")) {
+                lines.add(Text.itemText(Text.apply(raw, balance)));
             }
         }
         return lines;

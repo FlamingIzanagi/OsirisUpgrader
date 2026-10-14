@@ -130,6 +130,14 @@ public final class ConfigManager {
         return Math.min(seconds, 8_760L * 3_600L);
     }
 
+    public int dailySpins() {
+        int spins = config.getInt("daily-spins", 1);
+        if (spins < 0) {
+            return 0;
+        }
+        return Math.min(spins, 10_000);
+    }
+
     public boolean scaleDamagedTools() {
         return config.getBoolean("scale-damaged-tools", true);
     }
@@ -217,6 +225,7 @@ public final class ConfigManager {
         }
         if ("config.yml".equals(name)) {
             migrateDailyBroadcast(file);
+            migrateDailySpins(file);
         }
         mergeMissing(name, file);
         YamlConfiguration yaml = new YamlConfiguration();
@@ -410,6 +419,36 @@ public final class ConfigManager {
             plugin.getLogger().info("config.yml: se añadieron las opciones del aviso de giro diario.");
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "No se pudieron añadir las opciones del aviso de giro en config.yml.", ex);
+        }
+    }
+
+    private void migrateDailySpins(File file) {
+        if (file == null || !file.isFile()) {
+            return;
+        }
+        String text;
+        try {
+            text = java.nio.file.Files.readString(file.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.WARNING, "No se pudo leer config.yml para los giros diarios.", ex);
+            return;
+        }
+        if (java.util.regex.Pattern.compile("(?m)^daily-spins\\s*:").matcher(text).find()) {
+            return;
+        }
+        String block = "\n# Giros diarios de cada jugador dentro de spin-cooldown-seconds.\n"
+                + "# 1 es un giro por esa ventana. 0 deja solo los giros extra.\n"
+                + "# Si spin-cooldown-seconds es 0, no hay límite diario.\n"
+                + "daily-spins: 1\n";
+        java.util.regex.Matcher cooldown = java.util.regex.Pattern.compile("(?m)^spin-cooldown-seconds\\s*:.*$").matcher(text);
+        String updated = cooldown.find()
+                ? text.substring(0, cooldown.end()) + block + text.substring(cooldown.end())
+                : (text.endsWith("\n") ? text : text + "\n") + block;
+        try {
+            java.nio.file.Files.writeString(file.toPath(), updated, StandardCharsets.UTF_8);
+            plugin.getLogger().info("config.yml: se añadió daily-spins. El valor anterior del cooldown no cambió.");
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.WARNING, "No se pudo añadir daily-spins en config.yml.", ex);
         }
     }
 

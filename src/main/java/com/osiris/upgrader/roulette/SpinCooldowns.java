@@ -3,6 +3,7 @@ package com.osiris.upgrader.roulette;
 import com.osiris.upgrader.OsirisUpgraderPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.logging.Level;
 public final class SpinCooldowns {
     private final OsirisUpgraderPlugin plugin;
     private final File file;
-    private final Map<UUID, Long> lastSpin = new LinkedHashMap<>();
+    private final Map<UUID, SpinAllowance.State> players = new LinkedHashMap<>();
 
     public SpinCooldowns(OsirisUpgraderPlugin plugin) {
         this.plugin = plugin;
@@ -22,42 +23,120 @@ public final class SpinCooldowns {
     }
 
     public void load() {
-        lastSpin.clear();
+        players.clear();
         if (!file.exists()) {
             return;
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection players = yaml.getConfigurationSection("players");
-        if (players == null) {
+        ConfigurationSection root = yaml.getConfigurationSection("players");
+        if (root == null) {
             return;
         }
-        for (String key : players.getKeys(false)) {
+        boolean migrated = false;
+        for (String key : root.getKeys(false)) {
             try {
-                lastSpin.put(UUID.fromString(key), players.getLong(key));
+                UUID playerId = UUID.fromString(key);
+                if (root.isConfigurationSection(key)) {
+                    ConfigurationSection section = root.getConfigurationSection(key);
+                    players.put(playerId, new SpinAllowance.State(
+                            section == null ? 0L : section.getLong("window"),
+                            section == null ? 0 : section.getInt("used"),
+                            section == null ? 0 : section.getInt("extra")
+                    ));
+                } else {
+                    long last = root.getLong(key);
+                    players.put(playerId, new SpinAllowance.State(last, last > 0L ? 1 : 0, 0));
+                    migrated = true;
+                }
             } catch (RuntimeException ex) {
                 plugin.getLogger().log(Level.WARNING, "Cooldown inválido: " + key, ex);
             }
         }
+        refreshAll(System.currentTimeMillis());
+        if (migrated) {
+            save();
+        }
+    }
+
+    public boolean available(UUID playerId) {
+        if (playerId == null) {
+            return false;
+        }
+        return SpinAllowance.available(state(playerId), dailyMax(), cooldownMillis(), System.currentTimeMillis());
+    }
+
+    public int dailyRemaining(UUID playerId) {
+        return SpinAllowance.dailyRemaining(state(playerId), dailyMax(), cooldownMillis(), System.currentTimeMillis());
+    }
+
+    public int extra(UUID playerId) {
+        return current(playerId).extra();
     }
 
     public long remainingMillis(UUID playerId) {
-        if (playerId == null || plugin.configs().spinCooldownSeconds() <= 0L) {
+        if (playerId == null) {
             return 0L;
         }
-        Long last = lastSpin.get(playerId);
-        if (last == null) {
-            return 0L;
-        }
-        long duration = plugin.configs().spinCooldownSeconds() * 1_000L;
-        return Math.max(0L, last + duration - System.currentTimeMillis());
+        return SpinAllowance.remainingMillis(state(playerId), dailyMax(), cooldownMillis(), System.currentTimeMillis());
     }
 
-    public void mark(UUID playerId) {
-        if (playerId == null || plugin.configs().spinCooldownSeconds() <= 0L) {
+    public void consume(UUID playerId) {
+        if (playerId == null || cooldownMillis() <= 0L) {
             return;
         }
-        lastSpin.put(playerId, System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        SpinAllowance.State next = SpinAllowance.consume(state(playerId), dailyMax(), cooldownMillis(), now);
+        store(playerId, next);
         save();
+    }
+
+    public int grant(UUID playerId, int amount) {
+        int extra = rememberGrant(playerId, amount);
+        if (playerId != null && amount > 0) {
+            save();
+        }
+        return extra;
+    }
+
+    public Map<UUID, Integer> grantAll(Iterable<UUID> playerIds, int amount) {
+        Map<UUID, Integer> totals = new LinkedHashMap<>();
+        if (playerIds == null || amount <= 0) {
+            return totals;
+        }
+        for (UUID playerId : playerIds) {
+            if (playerId != null) {
+                totals.put(playerId, rememberGrant(playerId, amount));
+            }
+        }
+        if (!totals.isEmpty()) {
+            save();
+        }
+        return totals;
+    }
+
+    private int rememberGrant(UUID playerId, int amount) {
+        if (playerId == null || amount <= 0) {
+            return extra(playerId);
+        }
+        SpinAllowance.State next = SpinAllowance.grant(current(playerId), amount);
+        store(playerId, next);
+        return next.extra();
+    }
+
+    public void deny(Player player) {
+        UUID playerId = player.getUniqueId();
+        long remaining = remainingMillis(playerId);
+        Map<String, String> tokens = Map.of(
+                "time", formatRemaining(Math.max(1L, remaining)),
+                "daily", Integer.toString(dailyRemaining(playerId)),
+                "daily_max", Integer.toString(dailyMax()),
+                "extra", Integer.toString(extra(playerId))
+        );
+        if (remaining > 0L) {
+            plugin.messages().send(player, "spins-locked", tokens);
+            return;
+        }
+        plugin.messages().send(player, "spins-empty", tokens);
     }
 
     public static String formatRemaining(long millis) {
@@ -84,15 +163,54 @@ public final class SpinCooldowns {
         return parts.get(0) + ", " + parts.get(1) + " y " + parts.get(2);
     }
 
+    private SpinAllowance.State state(UUID playerId) {
+        long now = System.currentTimeMillis();
+        SpinAllowance.State current = current(playerId);
+        SpinAllowance.State refreshed = SpinAllowance.refreshed(current, cooldownMillis(), now);
+        if (!refreshed.equals(current)) {
+            store(playerId, refreshed);
+        }
+        return refreshed;
+    }
+
+    private SpinAllowance.State current(UUID playerId) {
+        return players.getOrDefault(playerId, SpinAllowance.State.empty());
+    }
+
+    private void store(UUID playerId, SpinAllowance.State state) {
+        if (state.used() == 0 && state.extra() == 0 && state.windowStartMillis() == 0L) {
+            players.remove(playerId);
+            return;
+        }
+        players.put(playerId, state);
+    }
+
+    private void refreshAll(long now) {
+        for (UUID playerId : new java.util.ArrayList<>(players.keySet())) {
+            store(playerId, SpinAllowance.refreshed(players.get(playerId), cooldownMillis(), now));
+        }
+    }
+
+    private int dailyMax() {
+        return plugin.configs().dailySpins();
+    }
+
+    private long cooldownMillis() {
+        return plugin.configs().spinCooldownSeconds() * 1_000L;
+    }
+
     private void save() {
         YamlConfiguration yaml = new YamlConfiguration();
-        ConfigurationSection players = yaml.createSection("players");
-        long keepAfter = System.currentTimeMillis() - Math.round(8760.0d * 3_600_000.0d);
-        for (Map.Entry<UUID, Long> entry : lastSpin.entrySet()) {
-            if (entry.getValue() < keepAfter) {
+        ConfigurationSection root = yaml.createSection("players");
+        for (Map.Entry<UUID, SpinAllowance.State> entry : players.entrySet()) {
+            SpinAllowance.State state = entry.getValue();
+            if (state.used() == 0 && state.extra() == 0) {
                 continue;
             }
-            players.set(entry.getKey().toString(), entry.getValue());
+            ConfigurationSection section = root.createSection(entry.getKey().toString());
+            section.set("window", state.windowStartMillis());
+            section.set("used", state.used());
+            section.set("extra", state.extra());
         }
         try {
             yaml.save(file);

@@ -131,12 +131,9 @@ public final class SpinAnimator {
             return;
         }
         boolean bypassCooldown = Permissions.has(player, Permissions.BYPASS_COOLDOWN);
-        if (!bypassCooldown) {
-            long remaining = plugin.cooldowns().remainingMillis(player.getUniqueId());
-            if (remaining > 0L) {
-                plugin.messages().send(player, "spin-cooldown", Map.of("time", SpinCooldowns.formatRemaining(remaining)));
-                return;
-            }
+        if (!bypassCooldown && !plugin.cooldowns().available(player.getUniqueId())) {
+            plugin.cooldowns().deny(player);
+            return;
         }
         boolean limitedHold = plugin.rewards().isLimited(holder.target());
         if (limitedHold && !plugin.rewards().tryHold(holder.target())) {
@@ -147,7 +144,7 @@ public final class SpinAnimator {
         }
         plugin.items().take(player, holder.inventory(), holder.layout().origin, sample, needed);
         if (!bypassCooldown) {
-            plugin.cooldowns().mark(player.getUniqueId());
+            plugin.cooldowns().consume(player.getUniqueId());
         }
         holder.setSpinning(true);
         boolean win = ThreadLocalRandom.current().nextDouble(100.0d) < evaluation.chance();

@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public final class OsirisCommand implements CommandExecutor, TabCompleter {
     private final OsirisUpgraderPlugin plugin;
@@ -41,6 +43,8 @@ public final class OsirisCommand implements CommandExecutor, TabCompleter {
             case "base" -> base(sender, label);
             case "history" -> history(sender, label);
             case "historyclear" -> historyClear(sender, label);
+            case "givespins" -> giveSpins(sender, label, args);
+            case "givespinsall" -> giveSpinsAll(sender, label, args);
             default -> plugin.messages().send(sender, "unknown-command");
         }
         return true;
@@ -150,6 +154,110 @@ public final class OsirisCommand implements CommandExecutor, TabCompleter {
         plugin.messages().send(sender, "history-cleared", Map.of("count", Integer.toString(removed)));
     }
 
+    private void giveSpins(CommandSender sender, String label, String[] args) {
+        if (!"osirisupgrader".equalsIgnoreCase(label)) {
+            plugin.messages().send(sender, "spins-use-full");
+            return;
+        }
+        if (!Permissions.has(sender, Permissions.GIVE_SPINS)) {
+            plugin.messages().send(sender, "no-permission");
+            return;
+        }
+        if (args.length < 3) {
+            plugin.messages().send(sender, "spins-usage");
+            return;
+        }
+        Integer amount = spinAmount(args[2]);
+        if (amount == null) {
+            plugin.messages().send(sender, "spins-invalid-amount");
+            return;
+        }
+        OfflinePlayer target = findPlayer(args[1]);
+        if (target == null) {
+            plugin.messages().send(sender, "player-not-found");
+            return;
+        }
+        int extra = plugin.cooldowns().grant(target.getUniqueId(), amount);
+        Map<String, String> tokens = Map.of(
+                "player", target.getName() == null ? args[1] : target.getName(),
+                "amount", Integer.toString(amount),
+                "extra", Integer.toString(extra)
+        );
+        if (target.isOnline() && target.getPlayer() != null) {
+            plugin.messages().send(target.getPlayer(), "spins-received", tokens);
+        }
+        plugin.messages().send(sender, "spins-given", tokens);
+    }
+
+    private void giveSpinsAll(CommandSender sender, String label, String[] args) {
+        if (!"osirisupgrader".equalsIgnoreCase(label)) {
+            plugin.messages().send(sender, "spins-use-full");
+            return;
+        }
+        if (!Permissions.has(sender, Permissions.GIVE_SPINS_ALL)) {
+            plugin.messages().send(sender, "no-permission");
+            return;
+        }
+        if (args.length < 2) {
+            plugin.messages().send(sender, "spins-all-usage");
+            return;
+        }
+        Integer amount = spinAmount(args[1]);
+        if (amount == null) {
+            plugin.messages().send(sender, "spins-invalid-amount");
+            return;
+        }
+        List<Player> online = new ArrayList<>(Bukkit.getOnlinePlayers());
+        List<UUID> ids = new ArrayList<>();
+        for (Player player : online) {
+            ids.add(player.getUniqueId());
+        }
+        Map<UUID, Integer> totals = plugin.cooldowns().grantAll(ids, amount);
+        for (Player player : online) {
+            Integer extra = totals.get(player.getUniqueId());
+            if (extra == null || !player.isOnline()) {
+                continue;
+            }
+            plugin.messages().send(player, "spins-received", Map.of(
+                    "amount", Integer.toString(amount),
+                    "extra", Integer.toString(extra)
+            ));
+        }
+        int count = totals.size();
+        if (count == 0) {
+            plugin.messages().send(sender, "spins-nobody");
+            return;
+        }
+        plugin.messages().send(sender, "spins-given-all", Map.of(
+                "amount", Integer.toString(amount),
+                "count", Integer.toString(count)
+        ));
+    }
+
+    private static Integer spinAmount(String raw) {
+        try {
+            int amount = Integer.parseInt(raw);
+            if (amount < 1 || amount > 100_000) {
+                return null;
+            }
+            return amount;
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private static OfflinePlayer findPlayer(String name) {
+        Player online = Bukkit.getPlayerExact(name);
+        if (online != null) {
+            return online;
+        }
+        OfflinePlayer cached = Bukkit.getOfflinePlayerIfCached(name);
+        if (cached != null && cached.hasPlayedBefore()) {
+            return cached;
+        }
+        return null;
+    }
+
     private void give(CommandSender sender, String[] args, boolean portable) {
         String permission = portable ? Permissions.GIVE : Permissions.SPAWNER;
         if (!Permissions.has(sender, permission)) {
@@ -210,7 +318,21 @@ public final class OsirisCommand implements CommandExecutor, TabCompleter {
             if (Permissions.has(sender, Permissions.HISTORY_CLEAR) && "osirisupgrader".equalsIgnoreCase(alias)) {
                 options.add("historyclear");
             }
+            if (Permissions.has(sender, Permissions.GIVE_SPINS) && "osirisupgrader".equalsIgnoreCase(alias)) {
+                options.add("givespins");
+            }
+            if (Permissions.has(sender, Permissions.GIVE_SPINS_ALL) && "osirisupgrader".equalsIgnoreCase(alias)) {
+                options.add("givespinsall");
+            }
             return filter(options, args[0]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("givespins") && Permissions.has(sender, Permissions.GIVE_SPINS)
+                && "osirisupgrader".equalsIgnoreCase(alias)) {
+            List<String> names = new ArrayList<>();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                names.add(player.getName());
+            }
+            return filter(names, args[1]);
         }
         if (args.length == 2 && (args[0].equalsIgnoreCase("giveitem") || args[0].equalsIgnoreCase("spawner"))) {
             String permission = args[0].equalsIgnoreCase("giveitem") ? Permissions.GIVE : Permissions.SPAWNER;
